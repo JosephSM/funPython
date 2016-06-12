@@ -58,8 +58,9 @@ def movePiece(board, turn):
 			continue
 		break
 
-
-	board[what], board[where] = "-", board[what]
+	if board[where] != "-":
+		deadpieces.append(board[where].strip())
+	board[what], board[where]= "-", board[what]
 	return board
 
 
@@ -75,12 +76,13 @@ def leave():
 	if bye == "y": exit()
 
 
-
+deadpieces = []
 myboard = createBoard()
 whosturn = 0
 
 while True:
 	printBoard(myboard)
+	print(deadpieces)
 	print("It's {}'s turn!".format(whosturn))
 	myboard = movePiece(myboard, whosturn)
 	whosturn = change(whosturn)
