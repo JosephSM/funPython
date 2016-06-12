@@ -35,7 +35,6 @@ def createBoard():
 
 
 def printBoard(od):
-	print(od)
 	for k, v in od.items():
 		if "1" in str(k):
 			print("\n\n", str(v).center(5),end=" ")
@@ -43,20 +42,50 @@ def printBoard(od):
 			print(str(v).center(5), end=" ")
 	print("\n")
 
-def movePiece(board):
-	what = input("What piece would you like to move?")
-	where = input("Where would you like to move?")
+def movePiece(board, turn):
+	while True:	
+		what = input("What piece would you like to move?")
+		if turn == 0 and "|" in board[what] or turn == 1 and not "|" in board[what]:
+			print("That's not your piece!") 
+			continue
+		break
+	
+	while True:
+		where = input("Where would you like to move?")
+		if ("|" in board[what] and "|" in board[where]) or \
+		("|" not in board[what] and "|" not in board[where] and board[where].isalnum()):
+			print("You can't capture your own piece, Silly.")
+			continue
+		break
+
+
 	board[what], board[where] = "-", board[what]
 	return board
 
 
+def change(turn):
+	if turn == 0:	
+		turn = 1
+	else:
+		turn = 0
+	return turn
+
+def leave():
+	bye = input("would you like to exit?")
+	if bye == "y": exit()
+
+
+
 myboard = createBoard()
+whosturn = 0
+
 while True:
 	printBoard(myboard)
-	myboard = movePiece(myboard)
-	leave = input("would you like to exit?")
-	if leave == "y":
-		exit()
+	print("It's {}'s turn!".format(whosturn))
+	myboard = movePiece(myboard, whosturn)
+	whosturn = change(whosturn)
+	leave()
+	
 
 
 
