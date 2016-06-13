@@ -6,6 +6,7 @@ The board: 8X8
 rules for each player
 """
 from pprint import pprint
+import sys
 import collections
 
 
@@ -34,8 +35,8 @@ def createBoard():
 	return board
 
 
-def printBoard(od):
-	for k, v in od.items():
+def printBoard(board):
+	for k, v in board.items():
 		if "1" in str(k):
 			print("\n\n", str(v).center(5),end=" ")
 		else:
@@ -44,22 +45,29 @@ def printBoard(od):
 
 def movePiece(board, turn):
 	while True:	
-		what = input("What piece would you like to move?")
-		if turn == 0 and "|" in board[what] or turn == 1 and not "|" in board[what]:
+		what = input("What piece would you like to move? ")
+		if not checkvalidity(what, board):
+			continue
+		elif board[what] == "-":
+			print("That's not a piece!")
+			continue
+		elif turn == 0 and "|" in board[what] or turn == 1 and not "|" in board[what]:
 			print("That's not your piece!") 
 			continue
 		break
 	
 	while True:
-		where = input("Where would you like to move?")
-		if ("|" in board[what] and "|" in board[where]) or \
+		where = input("Where would you like to move? ")
+		if not checkvalidity(where, board):
+			continue
+		elif ("|" in board[what] and "|" in board[where]) or \
 		("|" not in board[what] and "|" not in board[where] and board[where].isalnum()):
 			print("You can't capture your own piece, Silly.")
 			continue
 		break
 
 	if board[where] != "-":
-		deadpieces.append(board[where].strip())
+		deadpieces[change(turn)].append(board[where])
 	board[what], board[where]= "-", board[what]
 	return board
 
@@ -72,23 +80,32 @@ def change(turn):
 	return turn
 
 def leave():
-	bye = input("would you like to exit?")
-	if bye == "y": exit()
+	bye = input("would you like to exit? ").lower()
+	if bye == "yes" or bye == "y": sys.exit()
 
 
-deadpieces = []
+def whosdead():
+	print("0's Dead Pieces: {}".format(deadpieces[0]))
+	print("1's Dead Pieces: {}".format(deadpieces[1]))
+
+
+def checkvalidity(value, board):
+	if value == "q":
+		leave()
+	elif value not in board.keys():
+		print("That is not a valid input.")
+		return False
+	return True
+
+deadpieces = {0:[], 1:[]}
 myboard = createBoard()
 whosturn = 0
-
 while True:
 	printBoard(myboard)
-	print(deadpieces)
 	print("It's {}'s turn!".format(whosturn))
+	whosdead()
 	myboard = movePiece(myboard, whosturn)
 	whosturn = change(whosturn)
-	leave()
-	
-
 
 
 
