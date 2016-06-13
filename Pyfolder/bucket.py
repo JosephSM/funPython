@@ -3,7 +3,7 @@ from pprint import pprint
 
 def bucket():
     bucketdict = {}
-    for i in xrange(100):
+    for i in range(100):
         r = int(uniform(500,550))
         if r in bucketdict:
             bucketdict[r] += 1
