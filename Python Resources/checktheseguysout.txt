@@ -1,1 +1,0 @@
-David Beazley, Brandon Rhodes and Raymond Hettinger.
